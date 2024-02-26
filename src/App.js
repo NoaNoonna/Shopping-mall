@@ -1,27 +1,28 @@
-import { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./component/Navbar";
-import ProductAll from "./page/ProductAll";
-import Login from "./page/Login";
-import PrivateRoute from "./route/PrivateRoute";
+import './App.css';
+import { Routes, Route } from 'react-router-dom';
+import ProductAll from './page/ProductAll';
+import Login from './page/Login';
+import Navbar from './component/Navbar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState, useEffect } from 'react';
+import PrivateRoute from './route/PrivateRoute';
 
 function App() {
-  let [authenticate, setAuthenticate] = useState(false);
+  const [authenticate, setAuthenticate] = useState(false);
+
+  useEffect(()=>{
+    console.log("authenticate?", authenticate);
+  },[authenticate]);
+  
   return (
     <div>
       <Navbar authenticate={authenticate} setAuthenticate={setAuthenticate} />
       <Routes>
-        <Route path="/" element={<ProductAll />} />
-        <Route
-          path="/login"
-          element={<Login setAuthenticate={setAuthenticate} />}
-        />
-        <Route
-          path="/products/:id"
-          element={<PrivateRoute authenticate={authenticate} />}
-        />
+        <Route path="/" element={<ProductAll />}></Route>
+        <Route path="/login" element={<Login setAuthenticate={setAuthenticate}/>}></Route>
+        <Route 
+          path="/products/:id" 
+          element={<PrivateRoute authenticate={authenticate} />}></Route>
       </Routes>
     </div>
   );

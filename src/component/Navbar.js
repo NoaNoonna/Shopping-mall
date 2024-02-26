@@ -1,89 +1,88 @@
-import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
-import { faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
-const Navbar = ({ authenticate, setAuthenticate }) => {
-
-  const menuList = [
-    "여성",
-    "Divided",
-    "남성",
-    "신생아/유아",
-    "아동",
-    "H&M HOME",
-    "Sale",
-    "지속가능성",
-  ];
-
-  let [width, setWidth] = useState(0);
-  let navigate = useNavigate();
-
+const Navbar = ({authenticate, setAuthenticate}) => {
+ 
+  const navigate = useNavigate();
+  
   const onCheckEnter = (event) => {
-    if (event.key === "Enter") {
+    if(event.key === "Enter"){
       navigate(`/?q=${event.target.value}`);
+      console.log("뭐야?", event.target.value);
     }
   };
- 
+  
+  const menuList = [
+    'STEADY SELLER',
+    'NEW',
+    'BEST 50',
+    'LA us',
+    's/s re-open',
+    '2월의 하객룩',
+    'SPA',
+    'ORDINAIRE',
+    '제작데님',
+    'OUTER',
+    'TOP',
+    'PANTS',
+    'OPS/SK',
+    'ACC',
+    '당일발송',
+    'ONLY YOU'
+  ]
   return (
     <div>
-      <div className="side-menu" style={{ width: width }}>
-        <button className="closebtn" onClick={() => setWidth(0)}>
-          &times;
-        </button>
-        <div className="side-menu-list" id="menu-list">
-          {menuList.map((menu, index) => (
-            <button key={index}>{menu}</button>
-          ))}
+      { 
+        authenticate ? (
+          <div className="login-icon" onClick={()=>setAuthenticate(false)}>
+              <span>
+                  <FontAwesomeIcon icon={faEnvelope} bounce/>
+              </span>
+              <span>
+                  <FontAwesomeIcon icon={faShoppingBasket}/>
+              </span>
+              <span>
+                  <FontAwesomeIcon icon={faUser}/>
+                </span>
+              <span>Logout</span>
+           </div>
+        ) : (         
+           <div className="login-icon" onClick={()=>navigate("/login")}>
+              <span>
+                 <FontAwesomeIcon icon={faUser}/>
+                </span>
+              <span>Login</span>
+            </div>
+            )
+      };
+      
+        <div className="img-logo" onClick={()=>{navigate("/?q=")}}>
+            <img src="https://ganaesra.com/web/upload/category/logo/v2_10d49fe46f448e24ca8b1ccac4dd30ee_FWhTdm21yB_top.jpg"/>
         </div>
-      </div>
-   
-      <div className="nav-header">
-        <div className="burger-menu hide">
-          <FontAwesomeIcon icon={faBars} onClick={() => setWidth(250)} />
-        </div>
-     
-        {authenticate ? (
-          <div onClick={() => setAuthenticate(false)}>
-            <FontAwesomeIcon icon={faUser} />
-            <span style={{ cursor: "pointer" }}>로그아웃</span>
-          </div>
-        ) : (
-          <div onClick={() => navigate("/login")}>
-            <FontAwesomeIcon icon={faUser} />
-            <span style={{ cursor: "pointer" }}>로그인</span>
-          </div>
-        )}
-      </div>
-
-      <div className="nav-logo">
-        <Link to="/">
-          <img
-            width={100}
-            src="https://logos-world.net/wp-content/uploads/2020/04/HM-Logo-1999-present.jpg"
-          />
-        </Link>
-      </div>
-      <div class="nav-menu-area">
-        <ul className="menu">
-          {menuList.map((menu, index) => (
-            <li>
-              <a href="#" key={index}>
-                {menu}
-              </a>
-            </li>
+      
+      <div>
+        <ul className="menu-list">
+          {menuList.map((menu)=>(
+            <li>{menu}</li>
           ))}
         </ul>
 
-        <div className="search-box">
-          <FontAwesomeIcon icon={faSearch} />
-          <input type="text" placeholder="제품검색" onKeyDown={(event)=>onCheckEnter(event)} />
-        </div>
+        <span className="search-box">
+          <input 
+            type="text" 
+            placeholder="Search..."
+            onKeyUp={(event)=>onCheckEnter(event)}
+            />
+          <FontAwesomeIcon icon={faSearch}/>
+        </span>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

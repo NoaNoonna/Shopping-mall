@@ -1,67 +1,60 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Container, Row, Col, Button, Dropdown, Alert } from "react-bootstrap";
+import React, {useState, useEffect} from 'react';
+import { Container, Row, Col, Dropdown, Button } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 
 const ProductDetail = () => {
+  let {id} = useParams();
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
- 
-  const { id } = useParams();
- 
-  const getProductDetail = async () => {
-    setLoading(true);
-    let url = `https://my-json-server.typicode.com/NoaNoonna/Shopping-mall/products/${id}`;
+
+  const getProuct = async() => {
+    let url = `http://localhost:5000/products/${id}`;
     let response = await fetch(url);
     let data = await response.json();
-    setLoading(false);
-
+    console.log("data2222?", data);
     setProduct(data);
-  };
- 
-  useEffect(() => {
-    getProductDetail();
-  }, []);
- 
-  if (loading || product == null) return <h1>Loading</h1>;
- 
+  }
+
+  useEffect(()=>{
+    getProuct();
+  },[]);
+
   return (
-    <Container className="product-detail-card">
-      {error ? (
-        <Alert variant="danger" className="text-center">
-          {error}
-        </Alert>
-      ) : (
+    <Container>
         <Row>
           <Col xs={12} md={6} className="product-detail-img">
-            <img src={product.img} />
+            <img src={product?.img}/>
           </Col>
           <Col xs={12} md={6}>
-            <div className="product-info">{product.title}</div>
-            <div className="product-info">₩ {product.price}</div>
-            <div className="choice">
-              {product.choice ? "Conscious choice" : ""}
+            <div className="productInfo">
+              <span>{product?.ordinaire ? "[ordinaire]" : ""}</span>
+              <span>{product?.title}</span>
             </div>
-            <Dropdown className="drop-down">
-              <Dropdown.Toggle variant="outline-dark" id="dropdown-basic">
-                사이즈 선택
-              </Dropdown.Toggle>
+            <div className="new-item">{product?.new ? "🌷봄신상":""}</div>
+            <div className="product-price">₩{product?.price}</div>
+            <div>
+              <Dropdown className="drop-down">
+                <Dropdown.Toggle variant="outline-dark" id="dropdown-basic">
+                  사이즈 선택
+                </Dropdown.Toggle>
 
-              <Dropdown.Menu>
-                {product?.size.length > 0 &&
-                  product.size.map((item) => (
-                    <Dropdown.Item href="#/action-1">{item}</Dropdown.Item>
-                  ))}
-              </Dropdown.Menu>
-            </Dropdown>
-            <Button variant="dark" className="add-button">
-              추가
-            </Button>
+                <Dropdown.Menu>
+                  {product?.color.length > 0 &&
+                    product.color.map((item) => (
+                      <Dropdown.Item href="#/action-1">{item}</Dropdown.Item>
+                    ))}
+                </Dropdown.Menu>
+              </Dropdown>
+
+              <Button 
+                variant="dark" 
+                className="add-button"
+                >추가
+              </Button>
+            </div>
           </Col>
         </Row>
-      )}
     </Container>
   );
 };
 
-export default ProductDetail;
+export default ProductDetail

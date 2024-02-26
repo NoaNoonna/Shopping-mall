@@ -1,53 +1,46 @@
-import React, { useEffect, useState } from "react";
-import ProductCard from "../component/ProductCard";
-import { Row, Col, Container, Alert } from "react-bootstrap";
-import { useSearchParams } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import ProductCard from '../component/ProductCard';
+import { useSearchParams } from 'react-router-dom';
 
 const ProductAll = () => {
-  let [products, setProducts] = useState([]);
-  const [query, setQuery] = useSearchParams();
-  let [error, setError] = useState("");
+    const [productList, setProductList] = useState([]);
+    const [query, setQuery] = useSearchParams();
 
-  const getProducts = async () => {
-    try {
+    const getProductList = async() => {
       let keyword = query.get("q") || "";
-      let url = `https://my-json-server.typicode.com/NoaNoonna/Shopping-mall/products?q=${keyword}`;
+      console.log("keyword?", keyword);
+      let url = `http://localhost:5000/products?q=${keyword}`;
       let response = await fetch(url);
+      console.log("response", response);
       let data = await response.json();
-      if (data.length < 1) {
-        if (keyword !== "") {
-          setError(`${keyword}와 일치하는 상품이 없습니다`);
-        } else {
-          throw new Error("결과가 없습니다");
-        }
-      }
-      setProducts(data);
-    } catch (err) {
-      setError(err.message);
+      console.log("data?", data);
+      setProductList(data);
     }
-  };
+  
+    useEffect(()=>{
+        getProductList();
+    },[query]);
 
-  useEffect(() => {
-    getProducts();
-  }, [query]);
   return (
     <Container>
-      {error ? (
-        <Alert variant="danger" className="text-center">
-          {error}
-        </Alert>
-      ) : (
-        <Row>
-          {products.length > 0 &&
-            products.map((item) => (
-              <Col md={3} sm={12} key={item.id}>
-                <ProductCard item={item} />
-              </Col>
-            ))}
+        <Row className="main-img">
+            <img src="https://ganaesra.com/web/upload/appfiles/ZaReJam3QiELznoZeGGkMG/0ddbf4ca568c45b48353c2228a83a837.jpg"/>
+            {/* <img src="https://ganaesra.com/web/upload/appfiles/ZaReJam3QiELznoZeGGkMG/2bf81268256f4e14e88ce96e728c55fa.jpg"/>
+            <img src="https://ganaesra.com/web/upload/appfiles/ZaReJam3QiELznoZeGGkMG/3dc678a9d1d0015cdbaf4f57c2d5b343.jpg"/>
+            <img src="https://ganaesra.com/web/upload/appfiles/ZaReJam3QiELznoZeGGkMG/5ca17edfc02ea12fbbbe5ec57a57e007.jpg"/> */}
         </Row>
-      )}
-    </Container>
-  );
-};
+        <Row>
+            {productList.map((item)=>(
+                <Col lg={4} key={item.id}>
+                    <ProductCard item={item} />
+                </Col>
+            )
+        )}
 
-export default ProductAll;
+        </Row>
+    </Container>
+  )
+}
+
+export default ProductAll
